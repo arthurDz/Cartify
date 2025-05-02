@@ -22,7 +22,6 @@ export const fetchProducts = createAsyncThunk(
       const params = {offset, limit: PAGE_SIZE};
       if (categoryId) params.categoryId = categoryId;
       const {data} = await api.get('/products', {params});
-      console.log(">>> data", data);
       return {items: data, offset};
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);

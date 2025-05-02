@@ -54,30 +54,33 @@ export default function SearchScreen() {
     return params;
   };
 
-  const fetchPage = useCallback(async (q, off = 0) => {
-    if (!q.trim()) {
-      setProducts([]);
-      setHasMore(false);
-      return;
-    }
-    try {
-      setLoading(true);
-      if (cancelRef.current) cancelRef.current.cancel();
-      cancelRef.current = axios.CancelToken.source(); 
+  const fetchPage = useCallback(
+    async (q, off = 0) => {
+      if (!q.trim()) {
+        setProducts([]);
+        setHasMore(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        if (cancelRef.current) cancelRef.current.cancel();
+        cancelRef.current = axios.CancelToken.source();
 
-      const {data} = await api.get('/products', {
-        params: buildParams(q, off),
-        cancelToken: cancelRef.current.token,
-      })
+        const {data} = await api.get('/products', {
+          params: buildParams(q, off),
+          cancelToken: cancelRef.current.token,
+        });
 
-      setProducts(prev => (off === 0 ? data : [...prev, ...data]));
-      setHasMore(data.length === PAGE_SIZE);
-    } catch (err) {
-      if (!axios.isCancel(err)) console.warn(err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+        setProducts(prev => (off === 0 ? data : [...prev, ...data]));
+        setHasMore(data.length === PAGE_SIZE);
+      } catch (err) {
+        if (!axios.isCancel(err)) console.warn(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [selectedCat, minPrice, maxPrice],
+  );
 
   useEffect(() => {
     setOffset(0);
@@ -231,7 +234,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: horizontalScale(12),
   },
   filterInput: {
-    height: verticalScale(30),
+    height: verticalScale(38),
     width: horizontalScale(80),
     borderWidth: 1,
     borderColor: COLORS['Neutrals/neutrals-6'],
@@ -247,7 +250,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS['Neutrals/neutrals-6'],
     borderRadius: moderateScale(8),
     paddingHorizontal: horizontalScale(8),
-    height: verticalScale(32),
+    height: verticalScale(38),
   },
   catButtonText: {
     color: COLORS['Neutrals/neutrals-6'],

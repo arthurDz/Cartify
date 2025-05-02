@@ -7,9 +7,7 @@ import AuthStack from './AuthStack';
 
 export default function RootNavigation() {
   const {accessToken} = useSelector(state => state.auth);
-  const isLoggedIn = !!accessToken;
-  console.log(">>> isLo", isLoggedIn);
-  
+  const isLoggedIn = !!accessToken;  
 
   return (
     <NavigationContainer>

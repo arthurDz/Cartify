@@ -20,7 +20,6 @@ if (__DEV__) {
   });
 }
 
-// ➜ Attach access-token to every request
 api.interceptors.request.use(config => {
   const state = store.getState();
   const access = state.auth.accessToken;
@@ -30,13 +29,6 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-/**
- * Automatic refresh-token flow.
- *  1. If a 401 arrives, pause the original request.
- *  2. Call /auth/refresh-token with the persisted refreshToken.
- *  3. On success: update Redux, replay the original request.
- *  4. On failure: force logout.
- */
 let isRefreshing = false;
 let queued = [];
 
@@ -45,7 +37,6 @@ api.interceptors.response.use(
   async error => {
     const original = error.config;
 
-    // already retried? -> give up
     if (error.response?.status !== 401 || original._retry) {
       return Promise.reject(error);
     }
@@ -67,6 +58,11 @@ api.interceptors.response.use(
       isRefreshing = true;
       const state = store.getState();
       const rt = state.auth.refreshToken;
+      if (!rt || typeof rt !== 'string') {
+        store.dispatch(logout());
+        return Promise.reject(error);
+      }
+
       const {data} = await axios.post(`${API_URL}/auth/refresh-token`, {
         refreshToken: rt,
       });

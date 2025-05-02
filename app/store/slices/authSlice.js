@@ -53,6 +53,9 @@ const authSlice = createSlice({
       storage.delete('access');
       storage.delete('refresh');
     },
+    clearAuthError: state => {
+      state.error = null;
+    },
   },
   extraReducers: builder => {
     builder
@@ -88,5 +91,5 @@ const authSlice = createSlice({
   },
 });
 
-export const {logout, refreshTokenFulfilled} = authSlice.actions;
+export const {logout, refreshTokenFulfilled, clearAuthError} = authSlice.actions;
 export default authSlice.reducer;

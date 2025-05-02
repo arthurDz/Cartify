@@ -15,47 +15,29 @@ import {api} from '../../api/client';
 import ProductCard from '../../components/ProductCard';
 import { useNavigation } from '@react-navigation/native';
 
-const PAGE_SIZE = 10;
-
-export default function ProductDetailsScreen({route}) {
+const ProductDetailsScreen = ({route}) => {
   const {product} = route.params;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
   const [related, setRelated] = useState([]);
-  const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
 
-  const getRelated = async (off = 0) => {
-    if (loading || !hasMore) return;
+  const getRelated = async () => {
     try {
       setLoading(true);
-      const {data} = await api.get(`/products/${product.id}/related`, {
-        params: {limit: PAGE_SIZE, offset: off},
-      });
-      setRelated(prev => (off === 0 ? data : [...prev, ...data]));
-      if (data.length < PAGE_SIZE) setHasMore(false);
+      const {data} = await api.get(`/products/${product.id}/related/`);
+      setRelated(data.filter(p => p.id !== product.id));
     } catch (err) {
-      console.warn(err);
+      console.warn('Related fetch failed →', err?.message || err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    setOffset(0);
-    setHasMore(true);
-    getRelated(0);
+    getRelated();
   }, [product.id]);
-
-  const loadNext = () => {
-    if (!loading && hasMore) {
-      const next = offset + PAGE_SIZE;
-      setOffset(next);
-      getRelated(next);
-    }
-  };
 
   const renderRelated = ({item}) => <ProductCard item={item} />;
 
@@ -102,7 +84,6 @@ export default function ProductDetailsScreen({route}) {
             styles.relatedList,
             {paddingBottom: insets.bottom},
           ]}
-          onEndReached={loadNext}
           onEndReachedThreshold={0.4}
           ListFooterComponent={
             loading ? <ActivityIndicator style={{marginVertical: 16}} /> : null
@@ -112,6 +93,8 @@ export default function ProductDetailsScreen({route}) {
     </SafeAreaView>
   );
 }
+
+export default ProductDetailsScreen;
 
 const HERO_HEIGHT = verticalScale(240);
 
@@ -142,12 +125,12 @@ const styles = StyleSheet.create({
   },
   category: {
     marginTop: 2,
-    fontSize: SIZES.small,
+    fontSize: SIZES.medium,
     color: COLORS['Neutrals/neutrals-5'],
   },
   description: {
     marginTop: 10,
-    fontSize: SIZES.small,
+    fontSize: SIZES.xMedium,
     color: COLORS['Neutrals/neutrals-4'],
   },
   sectionHeading: {

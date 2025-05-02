@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Image, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {COLORS, SIZES, horizontalScale, verticalScale} from '../utils/Theme';
+import { price } from '../utils/price';
 
 export default function ProductCard({item}) {
   const navigation = useNavigation();
@@ -21,7 +22,7 @@ export default function ProductCard({item}) {
         <Text numberOfLines={1} style={styles.title}>
           {item.title}
         </Text>
-        <Text style={styles.price}>${item.price}</Text>
+        <Text style={styles.price}>{price(item.price)}</Text>
         <Text numberOfLines={1} style={styles.category}>
           {item.category?.name}
         </Text>
@@ -35,7 +36,7 @@ const CARD_WIDTH = (horizontalScale(375) - horizontalScale(36)) / 2;
 const styles = StyleSheet.create({
   card: {
     width: CARD_WIDTH,
-    backgroundColor: COLORS['washed-blue-800'],
+    backgroundColor: COLORS['primary-purple-800'],
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: verticalScale(12),

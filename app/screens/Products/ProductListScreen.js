@@ -13,6 +13,7 @@ import {
 import CategoryChip from '../../components/CategoryChip';
 import ProductCard from '../../components/ProductCard';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { logout } from '../../store/slices/authSlice';
 
 const CARD_HEIGHT = verticalScale(200);
 
@@ -58,8 +59,12 @@ const ProductListScreen = () => {
     [selectedCategory, dispatch],
   );
 
-  const handleClear = () => {
+  const onClearCategory = () => {
     setSelectedCategory(null);
+  }
+
+  const onLogout = () => {
+    dispatch(logout());
   }
 
   const renderCategory = ({item}) => (
@@ -78,8 +83,8 @@ const ProductListScreen = () => {
         <View style={styles.header}>
           <Text style={styles.headerText}>Cartify</Text>
 
-          <TouchableOpacity>
-            <SolidIcons.ShoppingCartIcon
+          <TouchableOpacity onPress={onLogout}>
+            <SolidIcons.ArrowRightStartOnRectangleIcon
               color={COLORS['Neutrals/neutrals-6']}
               size={SIZES.xxLarge}
             />
@@ -99,7 +104,7 @@ const ProductListScreen = () => {
         <View style={styles.body}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
             <Text style={styles.title}>Categories</Text>
-            {selectedCategory && <Text style={styles.clearTxt} onPress={handleClear}>Clear</Text>}
+            {selectedCategory && <Text style={styles.clearTxt} onPress={onClearCategory}>Clear</Text>}
           </View>
           <FlatList
             data={categories}
