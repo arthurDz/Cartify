@@ -62,20 +62,34 @@ cd ios && pod install && cd ..
 ## Project Structure
 ```
 app/
-├── assets/
+├── api/
+│   └── client.js
 ├── components/
+│   ├── CategoryChip.jsx
+│   ├── Input.jsx
+│   └── ProductCard.jsx
+├── hooks/
+│   └── useDebounce.js
 ├── navigation/
+│   ├── AppStack.js
 │   ├── AuthStack.js
-│   └── AppStack.js
+│   └── index.js
 ├── screens/
 │   ├── Auth/
+│   │   ├── LoginScreen.js
+│   │   └── RegisterScreen.js
 │   └── Products/
+│       ├── ProductDetailsScreen.js
+│       ├── ProductListScreen.js
+│       └── SearchScreen.js
 ├── store/
-│   ├── index.js
-│   └── slices/
+│   ├── slices/
+│   │   ├── authSlice.js
+│   │   └── productSlice.js
+│   └── index.js
 ├── utils/
-└── api/
-    └── client.js
+│   ├── price.js
+│   └── Theme.js
 ```
 
 ## Key Screens
