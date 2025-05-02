@@ -102,15 +102,5 @@ API_BASE_URL=https://api.escuelajs.co/api/v1
 ENABLE_MMKV_ENCRYPTION=true
 ```
 
-## Contributing
-1. Fork ➜ create a feature branch (`feat/cart`)  
-2. Follow Conventional Commits (`feat: …`, `fix: …`, `chore: …`)  
-3. Run `npm run lint` before pushing.
-
-PRs are welcome for:
-- Detox E2E tests
-- Offline product cache transformer
-- Dark‑mode theming
-
 ## License
 MIT © 2025 Your Name – fake‑store data courtesy of Escuelajs / Platzi.
