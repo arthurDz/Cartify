@@ -37,8 +37,6 @@ const ProductListScreen = () => {
   }, [dispatch, selectedCategory]);
 
   const loadNext = () => {
-    console.log(">>> end", hasMore);
-    
     if (!productsLoading && hasMore) {
       const nextOffset = offset + PAGE_LIMIT;
       dispatch(
@@ -59,6 +57,10 @@ const ProductListScreen = () => {
     },
     [selectedCategory, dispatch],
   );
+
+  const handleClear = () => {
+    setSelectedCategory(null);
+  }
 
   const renderCategory = ({item}) => (
     <CategoryChip
@@ -95,7 +97,10 @@ const ProductListScreen = () => {
         </TouchableOpacity>
 
         <View style={styles.body}>
-          <Text style={styles.title}>Categories</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+            <Text style={styles.title}>Categories</Text>
+            {selectedCategory && <Text style={styles.clearTxt} onPress={handleClear}>Clear</Text>}
+          </View>
           <FlatList
             data={categories}
             keyExtractor={i => String(i.id)}
@@ -103,6 +108,7 @@ const ProductListScreen = () => {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
+              marginBottom: verticalScale(12),
               gap: horizontalScale(5),
             }}
             ListEmptyComponent={
@@ -166,7 +172,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: moderateScale(6),
     borderColor: COLORS['Neutrals/neutrals-6'],
-    marginHorizontal: horizontalScale(12)
+    marginHorizontal: horizontalScale(12),
   },
   searchTxt: {
     fontSize: SIZES.medium,
@@ -181,6 +187,11 @@ const styles = StyleSheet.create({
     color: COLORS['Neutrals/neutrals-6'],
     fontWeight: '600',
     marginVertical: verticalScale(12),
+  },
+  clearTxt: {
+    fontSize: SIZES.medium,
+    color: COLORS['Neutrals/neutrals-6'],
+    fontWeight: '600',
   },
   productList: {
     marginTop: verticalScale(16),

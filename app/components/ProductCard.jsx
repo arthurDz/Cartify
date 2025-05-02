@@ -35,7 +35,7 @@ const CARD_WIDTH = (horizontalScale(375) - horizontalScale(36)) / 2;
 const styles = StyleSheet.create({
   card: {
     width: CARD_WIDTH,
-    backgroundColor: COLORS['primary-blue-800'],
+    backgroundColor: COLORS['washed-blue-800'],
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: verticalScale(12),
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     color: COLORS['Neutrals/neutrals-1'],
     fontWeight: '500',
   },
-  price: {fontSize: SIZES.small, color: COLORS['primary-500'], marginTop: 2},
+  price: {fontSize: SIZES.small, color: COLORS['primary-blue-50'], marginTop: 2},
   category: {
     fontSize: SIZES.xSmall,
     color: COLORS['Neutrals/neutrals-5'],

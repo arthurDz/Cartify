@@ -9,6 +9,17 @@ export const api = axios.create({
   timeout: 10000,
 });
 
+if (__DEV__) {
+  api.interceptors.request.use(config => {
+    const fullURL = axios.getUri(config);
+    console.log(
+      `[API] ${config.method?.toUpperCase()} → ${fullURL}`,
+      config.data || config.params || '',
+    );
+    return config;
+  });
+}
+
 // ➜ Attach access-token to every request
 api.interceptors.request.use(config => {
   const state = store.getState();
