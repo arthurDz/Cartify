@@ -1,97 +1,116 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Cartify
 
-# Getting Started
+## Overview
+**Cartify** is a bare‑React‑Native demo that showcases an end‑to‑end e‑commerce flow: OAuth login, product catalogue, search with advanced filters, rich product‑detail carousel, and related‑item discovery.  
+The app consumes the public Platzi Fake Store API (`https://api.escuelajs.co/api/v1`) and is architected for speed (JSI MMKV), security (encrypted token storage + auto‑refresh), and future scale (feature‑first folder layout, RTK global state).
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Table of Contents
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Running](#running)
+- [Project Structure](#project-structure)
+- [Key Screens](#key-screens)
+- [Core Services](#core-services)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Step 1: Start Metro
+## Features
+- 🔐 **OAuth login** with automatic refresh‑token handling  
+- 🛍️ **Product list** with infinite scroll & skeleton placeholders  
+- 🔎 **Advanced search** — debounced title search + min/max price + category dropdown  
+- 🖼 **Detail screen** with Reanimated image carousel & pagination dots  
+- 🤝 **Related products** (same category, paginated)  
+- 💲 **Scalable price formatter** (`Intl.NumberFormat` with cache)  
+- ⚡ **MMKV caching** for auth, settings and (optionally) product slices  
+- 🌙 Safe‑area & responsive helpers (`horizontalScale`, `verticalScale`)  
+- 📦 Ready for CI / Fastlane lanes (no Expo eject surprises)
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Prerequisites
+| Tool | Minimum version |
+|------|-----------------|
+| Node | >= 18 |
+| React Native CLI | >= 0.74 |
+| Xcode | 14 (only for iOS build) |
+| Android Studio | Flamingo + NDK r25c (for MMKV) |
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Installation
 
-```sh
-# Using npm
-npm start
+```bash
+# clone the repo
+git clone https://github.com/your‑user/cartify.git
+cd cartify
 
-# OR using Yarn
-yarn start
+# install JS deps
+npm install
+
+# iOS native deps
+cd ios && pod install && cd ..
 ```
 
-## Step 2: Build and run your app
+## Running
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+| Platform | Command |
+|----------|---------|
+| Metro bundler | `npm start` |
+| iOS simulator | `npm run ios` |
+| Android emulator | `npm run android` |
 
-### Android
+> **Tip:** Use a physical device for Android API 23+ to test MMKV AES encryption.
 
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+## Project Structure
+```
+app/
+├── assets/
+├── components/
+├── navigation/
+│   ├── AuthStack.js
+│   └── AppStack.js
+├── screens/
+│   ├── Auth/
+│   └── Products/
+├── store/
+│   ├── index.js
+│   └── slices/
+├── utils/
+└── api/
+    └── client.js
 ```
 
-### iOS
+## Key Screens
+| Screen | Highlights |
+|--------|------------|
+| **Login / Register** | Regex email + length validation, MMKV token persistence, Alert on server error. |
+| **ProductList** | Infinite `FlatList`, horizontal category chips, pull‑to‑refresh. |
+| **Search** | Debounced input, CancelToken, min/max price, category dropdown. |
+| **ProductDetail** | Reanimated carousel, dynamic dot indicators, paginated `/related` endpoint. |
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+## Core Services
+| File | Responsibility |
+|------|----------------|
+| `api/client.js` | Single axios instance, request logger, auth header, 401 queue + token refresh. |
+| `store/mmkv.js` | Shared MMKV instance + redux‑persist adapter (AES ready). |
+| `utils/price.js` | Cached `Intl.NumberFormat` helper – one‑liner to switch currency/locale. |
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+## Configuration
 
-```sh
-bundle install
+Create a `.env` at the repo root if you need to override defaults:
+
+```dotenv
+API_BASE_URL=https://api.escuelajs.co/api/v1
+ENABLE_MMKV_ENCRYPTION=true
 ```
 
-Then, and every time you update your native dependencies, run:
+## Contributing
+1. Fork ➜ create a feature branch (`feat/cart`)  
+2. Follow Conventional Commits (`feat: …`, `fix: …`, `chore: …`)  
+3. Run `npm run lint` before pushing.
 
-```sh
-bundle exec pod install
-```
+PRs are welcome for:
+- Detox E2E tests
+- Offline product cache transformer
+- Dark‑mode theming
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## License
+MIT © 2025 Your Name – fake‑store data courtesy of Escuelajs / Platzi.
